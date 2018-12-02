@@ -1,4 +1,4 @@
-package com.example.yudystriawan.projectpapb;
+package com.example.yudystriawan.projectpapb.Data;
 
 public class Food {
     private String desc;

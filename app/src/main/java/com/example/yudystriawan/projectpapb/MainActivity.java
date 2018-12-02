@@ -1,71 +1,100 @@
 package com.example.yudystriawan.projectpapb;
 
-import android.app.ProgressDialog;
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.example.yudystriawan.projectpapb.Adapter.FoodAdapter;
+import com.example.yudystriawan.projectpapb.Data.Food;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private String date;
-    private TextView text_tanggal, text_suhu, text_celcius, text_city;
-    private WeatherIconView weatherIconView;
-    private ProgressDialog progressDialog;
-    private HttpURLConnection httpConn;
-    private String webcontent;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private RecyclerView recycleFoods;
     private RecyclerView.Adapter foodAdapter;
+    private FusedLocationProviderClient mFusedLocationClient;
+    protected static double latitude, longitude;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        text_tanggal = findViewById(R.id.tanggal);
-        text_suhu = findViewById(R.id.suhu);
-        text_celcius = findViewById(R.id.celcius);
-        text_city = findViewById(R.id.city);
-
-        calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        date = dateFormat.format(calendar.getTime());
-        text_tanggal.setText(date);
-
-        weatherIconView = findViewById(R.id.icon_weather);
-
         recycleFoods = findViewById(R.id.recycle_view_foods);
 
-        getWeather("https://api.openweathermap.org/data/2.5/weather?q=japan,id&appid=28c444227fbea12e1d303822b43f327f");
-        getRecommend();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.nav_home:
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_map:
+                        Intent intent1 = new Intent(getBaseContext(), MapsActivity.class);
+                        intent1.putExtra("LATITUDE", latitude);
+                        intent1.putExtra("LONGITUDE", longitude);
+                        startActivity(intent1);
+                        break;
+                    default:
+                        return false;
+
+                }
+                return false;
+            }
+        });
+
+        getLastKnowLocation();
+
+        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
+        getRecommend();
+    }
+
+    private void getLastKnowLocation() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        } else {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                }
+            });
+        }
     }
 
     private void getRecommend() {
@@ -92,120 +121,12 @@ public class MainActivity extends AppCompatActivity {
         // Check for network connections
         if (networkInfo != null && networkInfo.isConnected()) {
             // Create background thread to connect and get data
-            new GetWeatherData().execute(weatherLink);
+            new WeatherActivity(this).execute(weatherLink);
         } else {
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class GetWeatherData extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(MainActivity.this) ;
-            progressDialog.setMessage("Please Wait");
-            progressDialog.show();
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            try {
-                JSONObject jo = new JSONObject(s);
-                JSONObject main_object = jo.getJSONObject("main");
-                JSONArray weather_object = jo.getJSONArray("weather");
-                JSONObject object = weather_object.getJSONObject(0);
-
-                String temp = String.valueOf(main_object.getDouble("temp"));
-                String city = jo.getString("name");
-                String desc = object.getString("description");
-                String humidity = String.valueOf(main_object.getString("humidity"));
-                String pressure = String.valueOf(main_object.getString("pressure"));
-
-                double kelvin = Double.parseDouble(temp);
-                double convert = (kelvin-273.15);
-                convert = Math.round(convert);
-                int celcius = (int)convert;
-
-                text_suhu.setText(String.valueOf(celcius));
-                text_suhu.setTextSize(100);
-
-                text_celcius.setText("\u2103");
-
-                text_city.setText(city);
-
-                if (desc.contains("thunderstrom")){
-                    weatherIconView.setIconResource(getString(R.string.wi_day_thunderstorm));
-                }else if (desc.contains("rain")){
-                    weatherIconView.setIconResource(getString(R.string.wi_day_rain));
-                }else if (desc.contains("cloud")){
-                    weatherIconView.setIconResource(getString(R.string.wi_day_cloudy));
-                }else if (desc.contains("snow")){
-                    weatherIconView.setIconResource(getString(R.string.wi_day_snow));
-                }else {
-                    weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
-                }
-
-                httpConn.disconnect();
-                progressDialog.dismiss();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String link = strings[0];
-            InputStream in = null;
-            try {
-                StringBuilder sb = new StringBuilder();
-                in = openHttpConnection(link);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
-                String nextLine = "";
-                while ((nextLine = reader.readLine()) != null) {
-                    sb.append(nextLine);
-                    webcontent = sb.toString();
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return webcontent;
-        }
-
-        private InputStream openHttpConnection(String url) {
-            InputStream in = null;
-            int resCode;
-
-            try {
-                URL link = new URL(url);
-
-                httpConn = (HttpURLConnection) link.openConnection();
-                httpConn.setAllowUserInteraction(false);
-                httpConn.setInstanceFollowRedirects(true);
-                httpConn.setReadTimeout(10000);
-                httpConn.setConnectTimeout(15000);
-                httpConn.setRequestMethod("GET");
-                httpConn.connect();
-                resCode = httpConn.getResponseCode();
-
-                if (resCode == HttpURLConnection.HTTP_OK){
-                    in = httpConn.getInputStream();
-                }
-            }catch (MalformedURLException e){
-                e.printStackTrace();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-            return  in;
-        }
-    }
 }
+

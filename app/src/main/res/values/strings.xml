@@ -2,4 +2,7 @@
     <string name="app_name">ProjectPAPB</string>
     <string name="nav_home">Home</string>
     <string name="nav_map">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="nav_call">Call</string>
+    <string name="nav_direction">Direction</string>
 </resources>
