@@ -1,6 +1,5 @@
 package com.example.yudystriawan.projectpapb.Adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.yudystriawan.projectpapb.Data.Food;
+import com.example.yudystriawan.projectpapb.Data.Restoran;
 import com.example.yudystriawan.projectpapb.DetailFoodActivity;
 import com.example.yudystriawan.projectpapb.R;
 
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     LayoutInflater mInflater;
-    ArrayList<Food> foodArrayList;
+    ArrayList<Restoran> foodArrayList;
 
-    public FoodAdapter(LayoutInflater mInflater, ArrayList<Food> foodArrayList) {
+    public FoodAdapter(LayoutInflater mInflater, ArrayList<Restoran> foodArrayList) {
         this.mInflater = mInflater;
         this.foodArrayList = foodArrayList;
     }
@@ -37,16 +37,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final FoodViewHolder foodViewHolder, final int i) {
-        final Food food = foodArrayList.get(i);
+        final Restoran resto = foodArrayList.get(i);
 
-        foodViewHolder.image_food.setImageResource(food.getImage());
-        foodViewHolder.text_foodDesc.setText(food.getDesc());
-        foodViewHolder.image_direction.setImageResource(food.getButton());
+        foodViewHolder.image_food.setImageResource(R.drawable.ic_baseline_fastfood_24px);
+        foodViewHolder.text_foodDesc.setText(resto.getName());
+        foodViewHolder.image_direction.setImageResource(R.drawable.ic_baseline_directions_24px);
         foodViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), DetailFoodActivity.class);
-                intent.putExtra("NAMA_RESTORAN", food.getDesc());
+                intent.putExtra("ID", resto.getId());
+                intent.putExtra("NAMA_RESTORAN", resto.getName());
+                intent.putExtra("LAT", resto.getLatitude());
+                intent.putExtra("LONG", resto.getLongitude());
                 view.getContext().startActivity(intent);
             }
         });

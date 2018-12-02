@@ -33,7 +33,10 @@ public class DetailFoodActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         String restoran = (String)b.get("NAMA_RESTORAN");
-        textView.setText(restoran);
+        String id = (String)b.get("ID");
+        String tlat = (String)b.get("LAT");
+        String tlong = (String)b.get("LONG");
+        textView.setText(restoran+"---"+id);
 
         getReviewList();
 
