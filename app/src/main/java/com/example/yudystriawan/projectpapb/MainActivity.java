@@ -81,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        getLastKnowLocation();
+        readFB();
+
+//        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
+        //getRecommend();
+
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -106,16 +112,54 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getLastKnowLocation();
+    }
 
-//        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
-        //getRecommend();
-        readFB();
+    //^^^END OF ONCREATE
+
+
+    public static double getLatitude() {
+        return latitude;
+    }
+
+    public static double getLongitude() {
+        return longitude;
+    }
+
+    private void getLastKnowLocation() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        } else {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(
+                    new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                try {
+                                    latitude =  location.getLatitude();
+                                    longitude =  location.getLongitude();
+
+                                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                                    if (addresses.size() > 0) {
+                                        getWeather(location.getLatitude(), location.getLongitude());
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else { // Show "no location" }
+                            }
+                        }
+                    });
+        }
     }
 
     private void getWeather(double latitude, double longitude) {
         String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=3fd8da85e581b3ff8dfb191ea4454620";
-
 
         JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET,
                 url,
@@ -203,50 +247,6 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(jor);
     }
-    //^^^END OF ONCREATE
-
-
-    public static double getLatitude() {
-        return latitude;
-    }
-
-    public static double getLongitude() {
-        return longitude;
-    }
-
-    private void getLastKnowLocation() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]
-                            {Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-        } else {
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(
-                    new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                try {
-                                    latitude =  location.getLatitude();
-                                    longitude =  location.getLongitude();
-
-                                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-                                    if (addresses.size() > 0) {
-                                        getWeather(location.getLatitude(), location.getLongitude());
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            } else { // Show "no location" }
-                            }
-                        }
-                    });
-        }
-    }
-
     //AMBIL DATA DARI FIREBASE
     int sizeData = 0;
     private void readFB() {
