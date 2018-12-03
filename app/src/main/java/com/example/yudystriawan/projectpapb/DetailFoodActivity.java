@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.example.yudystriawan.projectpapb.Adapter.ReviewAdapter;
 import com.example.yudystriawan.projectpapb.Data.Review;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,8 @@ public class DetailFoodActivity extends AppCompatActivity {
     private RecyclerView.Adapter reviewAdapter;
     String restoran,phone,id;
     double destLat,destLon,oriLat,oriLon;
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,22 +79,37 @@ public class DetailFoodActivity extends AppCompatActivity {
             }
         });
 
-        getReviewList();
+        readRev(id);
 
     }
 
-    private void getReviewList() {
-        ArrayList<Review> reviews = new ArrayList<>();
-        reviews.add(new Review("NAMA1", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA2", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA3", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA4", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA5", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
+    private void readRev(String indeks) {
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        db = FirebaseFirestore.getInstance();
 
-        reviewAdapter = new ReviewAdapter(LayoutInflater.from(this), reviews);
-        recyclerView.setAdapter(reviewAdapter);
+        db.collection("DaftarMakananSample")
+                .document(indeks)
+                .collection("LstReview")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        String komentar, nama;
+                        int sizeData = queryDocumentSnapshots.size();
+                        if(sizeData != 0){
+                            for (int i = 0; i < sizeData; i++) {
+                                komentar = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
+                                nama = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
+                                review.add(new Review(nama, komentar));
+                            }
+                            recyclerRev.setHasFixedSize(true);
+                            recyclerRev.setLayoutManager(new LinearLayoutManager(mContext));
+
+                            reviewAdapter = new ReviewAdapter(LayoutInflater.from(mContext), review);
+                            recyclerRev.setAdapter(reviewAdapter);
+                        }
+                    }
+                });
+
     }
 }
