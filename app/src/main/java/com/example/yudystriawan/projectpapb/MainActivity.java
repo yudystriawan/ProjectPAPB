@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                         case "Clear":
                             weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
                             break;
-                        case "Atmosphere":
+                        case "Haze":
                             weatherIconView.setIconResource(getString(R.string.wi_day_haze));
                             break;
                         default:
@@ -305,6 +305,8 @@ public class MainActivity extends AppCompatActivity {
 
                             foodAdapter = new FoodAdapter(LayoutInflater.from(mContext), listRestSample);
                             recycleFoods.setAdapter(foodAdapter);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Tidak ada resto yang sesuai", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
