@@ -6,20 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".DetailFoodActivity">
 
-    <ImageView
-        android:id="@+id/image_food"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_food">
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -30,14 +24,29 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@+id/nama_restoran2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/nama_restoran2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="24dp"
                 android:text="TextView"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/nama_restoran" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>

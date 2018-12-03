@@ -1,5 +1,6 @@
 package com.example.yudystriawan.projectpapb;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,24 +11,35 @@ import android.widget.TextView;
 
 import com.example.yudystriawan.projectpapb.Adapter.FoodAdapter;
 import com.example.yudystriawan.projectpapb.Adapter.ReviewAdapter;
+import com.example.yudystriawan.projectpapb.Data.Restoran;
 import com.example.yudystriawan.projectpapb.Data.Review;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 public class DetailFoodActivity extends AppCompatActivity {
 
-    private TextView textView;
+    private TextView textView, textView2;
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerRev;
     private RecyclerView.Adapter reviewAdapter;
+    private FirebaseFirestore db;
+    ArrayList<Review> review = new ArrayList<>();
+    Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_food);
 
-        recyclerView = findViewById(R.id.recycle_review);
+        mContext = this;
+        recyclerRev = findViewById(R.id.recycle_review);
         textView = findViewById(R.id.nama_restoran);
+        textView2 = findViewById(R.id.nama_restoran2);
 
 
         Intent intent = getIntent();
@@ -36,24 +48,44 @@ public class DetailFoodActivity extends AppCompatActivity {
         String id = (String)b.get("ID");
         String tlat = (String)b.get("LAT");
         String tlong = (String)b.get("LONG");
-        textView.setText(restoran+"---"+id);
+        String oriLat = String.valueOf(b.get("OriginLat"));
+        String oriLon = String.valueOf(b.get("OriginLon"));
+        textView.setText(restoran);
 
-        getReviewList();
+        readRev(id);
+        //getReviewList();
 
     }
 
-    private void getReviewList() {
-        ArrayList<Review> reviews = new ArrayList<>();
-        reviews.add(new Review("NAMA1", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA2", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA3", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA4", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
-        reviews.add(new Review("NAMA5", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,"));
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    private void readRev(String indeks) {
 
-        reviewAdapter = new ReviewAdapter(LayoutInflater.from(this), reviews);
-        recyclerView.setAdapter(reviewAdapter);
+        db = FirebaseFirestore.getInstance();
+
+        db.collection("DaftarMakananSample")
+                .document(indeks)
+                .collection("LstReview")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        String komentar, nama;
+                        int sizeData = queryDocumentSnapshots.size();
+                        if(sizeData != 0){
+                            for (int i = 0; i < sizeData; i++) {
+                                komentar = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
+                                nama = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
+                                review.add(new Review(nama, komentar));
+                            }
+                            recyclerRev.setHasFixedSize(true);
+                            recyclerRev.setLayoutManager(new LinearLayoutManager(mContext));
+
+                            reviewAdapter = new ReviewAdapter(LayoutInflater.from(mContext), review);
+                            recyclerRev.setAdapter(reviewAdapter);
+                        }
+                    }
+                });
+
     }
+
 }

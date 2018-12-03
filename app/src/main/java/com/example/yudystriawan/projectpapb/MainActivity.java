@@ -152,8 +152,7 @@ public class MainActivity extends AppCompatActivity {
                         String id, name, phone, rating, type, weather, latitude, longitude;
                         //PERLU DITAMBAH TRY CATCH(?)
                         for (int i = 0; i < sizeData; i++) {
-
-                            id = queryDocumentSnapshots.getDocuments().get(i).get("Id").toString();
+                            id = String.valueOf(i);
                             name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
                             phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
                             rating = queryDocumentSnapshots.getDocuments().get(i).get("Rating").toString();
