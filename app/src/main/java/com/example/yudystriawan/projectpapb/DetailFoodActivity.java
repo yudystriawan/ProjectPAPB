@@ -26,7 +26,7 @@ public class DetailFoodActivity extends AppCompatActivity {
     private TextView textView;
     private BottomNavigationView bottomNavigationView;
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerRev;
     private RecyclerView.Adapter reviewAdapter;
     String restoran,phone,id;
     double destLat,destLon,oriLat,oriLon;
@@ -83,15 +83,15 @@ public class DetailFoodActivity extends AppCompatActivity {
             }
         });
 
-        readRev(id);
+        readRev(id, MainActivity.jenisDatabase);
 
     }
 
-    private void readRev(String indeks) {
+    private void readRev(String indeks, String database) {
 
         db = FirebaseFirestore.getInstance();
 
-        db.collection("DaftarMakananSample")
+        db.collection(database)
                 .document(indeks)
                 .collection("LstReview")
                 .get()

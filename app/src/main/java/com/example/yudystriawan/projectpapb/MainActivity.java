@@ -1,16 +1,12 @@
 package com.example.yudystriawan.projectpapb;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -44,10 +40,8 @@ import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.StringValue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter foodAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
     protected static double latitude, longitude;
+    protected static String jenisDatabase;
     private BottomNavigationView bottomNavigationView;
     ArrayList<Restoran> listRestSample = new ArrayList<Restoran>();
     private FirebaseFirestore db;
@@ -90,15 +85,18 @@ public class MainActivity extends AppCompatActivity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        
         getLastKnowLocation();
 
-        readFB("DaftarMakananSample");
+        jenisDatabase = "DaftarMakananSample";
+        readFB(jenisDatabase);
 
         btnTerdekat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listRestSample.clear();
-                readFB("DaftarMakananSample");
+                jenisDatabase = "DaftarMakananSample";
+                readFB(jenisDatabase);
             }
         });
 
@@ -106,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 listRestSample.clear();
-                readFB("DaftarMakanan");
+                jenisDatabase = "DaftarMakanan";
+                readFB(jenisDatabase);
             }
         });
 
@@ -309,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                         String id, name, phone, rating, type, weather, latitude, longitude;
                         //PERLU DITAMBAH TRY CATCH(?)
                         for (int i = 0; i < sizeData; i++) {
-                            if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
+//                            if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
                                 id = String.valueOf(i);
                                 name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
                                 phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
@@ -319,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                                 latitude = queryDocumentSnapshots.getDocuments().get(i).get("Latitude").toString();
                                 longitude = queryDocumentSnapshots.getDocuments().get(i).get("Longitude").toString();
                                 listRestSample.add(new Restoran(id, name, phone, rating, type, weather, latitude, longitude));
-                            }
+//                            }
                         }
                         if (listRestSample.size() != 0){
                             recycleFoods.setHasFixedSize(true);
