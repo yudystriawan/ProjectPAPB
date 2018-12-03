@@ -1,5 +1,6 @@
 package com.example.yudystriawan.projectpapb;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -30,6 +31,8 @@ public class DetailFoodActivity extends AppCompatActivity {
     String restoran,phone,id;
     double destLat,destLon,oriLat,oriLon;
     private FirebaseFirestore db;
+    ArrayList<Review> review = new ArrayList<>();
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
