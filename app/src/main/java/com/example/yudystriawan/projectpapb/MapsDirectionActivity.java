@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.yudystriawan.projectpapb.Data.Restoran;
@@ -11,13 +12,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
 
-public class MapsPlacesActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsDirectionActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     MarkerOptions origin, destination;
@@ -26,33 +29,34 @@ public class MapsPlacesActivity extends FragmentActivity implements OnMapReadyCa
     private Button btnDirect;
     double originLat, originLon, destinationLat, destinationLon;
     String destName;
-    ArrayList<Restoran> listRestSample = new ArrayList<Restoran>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_maps_direction);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Intent i = getIntent();
-        if (i.getExtras() != null){
-            originLat = i.getExtras().getDouble("originLat");
-            originLon = i.getExtras().getDouble("originLon");
-            destinationLat = i.getExtras().getDouble("destLat");
-            destinationLon = i.getExtras().getDouble("destLon");
+        Intent direction= getIntent();
+        if (direction.getExtras() != null){
+            originLat = direction.getExtras().getDouble("OriginLat");
+            originLon = direction.getExtras().getDouble("OriginLon");
+            destinationLat = direction.getExtras().getDouble("DestLat");
+            destinationLon = direction.getExtras().getDouble("DestLon");
+            destName = direction.getExtras().getString("DestName");
             locationNow = new LatLng(originLat,originLon);
+            locationDest = new LatLng(destinationLat, destinationLon);
         }
 
-//        btnDirect = findViewById(R.id.btnDirect);
-//
-//        btnDirect.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                OpenGoogleMap(destinationLat, destinationLon);
-//            }
-//        });
+        btnDirect = findViewById(R.id.btnDirect);
+
+        btnDirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenGoogleMap(destinationLat, destinationLon);
+            }
+        });
     }
 
     /**
@@ -69,17 +73,9 @@ public class MapsPlacesActivity extends FragmentActivity implements OnMapReadyCa
         mMap = googleMap;
         origin = new MarkerOptions().position(locationNow).title("Your Here");
         mMap.addMarker(origin);
-        for (int i = 0; i < listRestSample.size(); i++){
-            destinationLat = Double.valueOf(listRestSample.get(i).getLatitude());
-            destinationLon = Double.valueOf(listRestSample.get(i).getLongitude());
-            destName = listRestSample.get(i).getName();
-            locationDest = new LatLng(destinationLat, destinationLon);
-            destination = new MarkerOptions().position(locationDest).title(destName);
-            mMap.addMarker(destination);
-        }
-//        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-//        Marker destination = mMap.addMarker(new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-//        destination.showInfoWindow();
+        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        Marker destination = mMap.addMarker(new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        destination.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 15));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
 

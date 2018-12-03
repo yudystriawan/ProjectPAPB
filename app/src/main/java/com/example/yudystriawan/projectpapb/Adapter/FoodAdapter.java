@@ -49,11 +49,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), DetailFoodActivity.class);
                 intent.putExtra("OriginLat", MainActivity.getLatitude());
-                intent.putExtra("OriginDest", MainActivity.getLongitude());
+                intent.putExtra("OriginLon", MainActivity.getLongitude());
                 intent.putExtra("ID", resto.getId());
-                intent.putExtra("NAMA_RESTORAN", resto.getName());
-                intent.putExtra("LAT", resto.getLatitude());
-                intent.putExtra("LONG", resto.getLongitude());
+                intent.putExtra("DestName", resto.getName());
+                intent.putExtra("DestLat", Double.valueOf(resto.getLatitude()));
+                intent.putExtra("DestLon", Double.valueOf(resto.getLongitude()));
                 intent.putExtra("PHONE", resto.getPhone());
                 view.getContext().startActivity(intent);
             }

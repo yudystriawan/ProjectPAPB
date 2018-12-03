@@ -42,8 +42,10 @@ import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.StringValue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     private String weatherNow;
     private TextView text_tanggal, text_suhu, text_celcius, text_city, text_detail;
     private WeatherIconView weatherIconView;
+
+    public ArrayList<Restoran> getListRestSample() {
+        return listRestSample;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                         //PERLU DITAMBAH TRY CATCH(?)
                         for (int i = 0; i < sizeData; i++) {
                             if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
-                                id = queryDocumentSnapshots.getDocuments().get(i).get("Id").toString();
+                                id = String.valueOf(i);
                                 name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
                                 phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
                                 rating = queryDocumentSnapshots.getDocuments().get(i).get("Rating").toString();
@@ -283,5 +289,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+
 }
 

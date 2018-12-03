@@ -40,7 +40,7 @@
         <activity android:name=".DetailFoodActivity"></activity>
 
         <activity
-            android:name=".MapsPlacesActivity"
+            android:name=".MapsDirectionActivity"
             android:label="Places" />
     </application>
 

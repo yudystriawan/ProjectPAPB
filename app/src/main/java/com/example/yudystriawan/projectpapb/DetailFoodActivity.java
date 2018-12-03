@@ -24,7 +24,8 @@ public class DetailFoodActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter reviewAdapter;
-
+    String restoran,phone,id;
+    double destLat,destLon,oriLat,oriLon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +38,14 @@ public class DetailFoodActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
-        String restoran = (String)b.get("NAMA_RESTORAN");
-        final String phone = (String)b.get("PHONE");
-        String id = (String)b.get("ID");
-        final String destLat = (String)b.get("LAT");
-        final String destLon = (String)b.get("LONG");
-        final String oriLat = String.valueOf(b.get("OriginLat"));
-        final String oriLon = String.valueOf(b.get("OriginLon"));
+        restoran = b.getString("DestName");
+        phone = b.getString("PHONE");
+        id = b.getString("ID");
+        destLat = b.getDouble("DestLat");
+        destLon = b.getDouble("DestLon");
+        oriLat = b.getDouble("OriginLat");
+        oriLon = b.getDouble("OriginLon");
+
         textView.setText(restoran);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,11 +61,11 @@ public class DetailFoodActivity extends AppCompatActivity {
                         startActivity(call);
                         break;
                     case R.id.nav_direction:
-                        Intent direction = new Intent(getBaseContext(), MapsPlacesActivity.class);
-                        direction.putExtra("originLat", oriLat);
-                        direction.putExtra("originLon", oriLon);
-                        direction.putExtra("destLat", destLat);
-                        direction.putExtra("destLon", destLon);
+                        Intent direction = new Intent(getBaseContext(), MapsDirectionActivity.class);
+                        direction.putExtra("OriginLat", oriLat);
+                        direction.putExtra("OriginLon", oriLon);
+                        direction.putExtra("DestLat", destLat);
+                        direction.putExtra("DestLon", destLon);
                         startActivity(direction);
                     default:
                         break;
