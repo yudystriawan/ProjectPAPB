@@ -102,7 +102,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Terpopuler"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/detail"
         app:layout_constraintStart_toEndOf="@+id/btnTerdekat"
         app:layout_constraintTop_toBottomOf="@+id/city" />
 
