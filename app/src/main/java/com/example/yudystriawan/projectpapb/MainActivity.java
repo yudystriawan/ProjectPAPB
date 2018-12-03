@@ -76,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
     private WeatherIconView weatherIconView;
     private Button btnTerpopuler, btnTerdekat;
 
-    public ArrayList<Restoran> getListRestSample() {
-        return listRestSample;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,11 +299,13 @@ public class MainActivity extends AppCompatActivity {
                                 listRestSample.add(new Restoran(id, name, phone, rating, type, weather, latitude, longitude));
                             }
                         }
-                        recycleFoods.setHasFixedSize(true);
-                        recycleFoods.setLayoutManager(new LinearLayoutManager(mContext));
+                        if (listRestSample.size() != 0){
+                            recycleFoods.setHasFixedSize(true);
+                            recycleFoods.setLayoutManager(new LinearLayoutManager(mContext));
 
-                        foodAdapter = new FoodAdapter(LayoutInflater.from(mContext), listRestSample);
-                        recycleFoods.setAdapter(foodAdapter);
+                            foodAdapter = new FoodAdapter(LayoutInflater.from(mContext), listRestSample);
+                            recycleFoods.setAdapter(foodAdapter);
+                        }
                     }
                 });
 
