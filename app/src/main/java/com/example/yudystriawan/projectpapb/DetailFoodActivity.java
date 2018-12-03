@@ -36,7 +36,9 @@ public class DetailFoodActivity extends AppCompatActivity {
         String id = (String)b.get("ID");
         String tlat = (String)b.get("LAT");
         String tlong = (String)b.get("LONG");
-        textView.setText(restoran+"---"+id);
+        String oriLat = String.valueOf(b.get("OriginLat"));
+        String oriLon = String.valueOf(b.get("OriginLon"));
+        textView.setText("oriLat: " + oriLat+"---oriLon:"+oriLon+"---tLat"+tlat+"---tLon"+tlong);
 
         getReviewList();
 

@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -18,11 +19,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.yudystriawan.projectpapb.Adapter.FoodAdapter;
-import com.example.yudystriawan.projectpapb.Data.Food;
 
 import com.example.yudystriawan.projectpapb.Data.Restoran;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,9 +68,10 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.nav_map:
-                        Intent intent1 = new Intent(getBaseContext(), MapsActivity.class);
+                        Intent intent1 = new Intent(getBaseContext(), MapsNearbyActivity.class);
                         intent1.putExtra("originLat", latitude);
                         intent1.putExtra("originLon", longitude);
+                        intent1.putExtra("data", (Serializable) listRestSample);
                         startActivity(intent1);
                         break;
                     default:
@@ -89,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
     }
     //^^^END OF ONCREATE
 
+
+    public static double getLatitude() {
+        return latitude;
+    }
+
+    public static double getLongitude() {
+        return longitude;
+    }
+
     private void getLastKnowLocation() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -102,8 +112,9 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
+                                    latitude =  location.getLatitude();
+                                    longitude =  location.getLongitude();
+                            } else { // Show "no location" }
                             }
                         }
                     });

@@ -2,24 +2,22 @@ package com.example.yudystriawan.projectpapb;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Button;
 
+import com.example.yudystriawan.projectpapb.Data.Restoran;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.net.URL;
+import java.util.ArrayList;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsPlacesActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     MarkerOptions origin, destination;
@@ -28,6 +26,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button btnDirect;
     double originLat, originLon, destinationLat, destinationLon;
     String destName;
+    ArrayList<Restoran> listRestSample = new ArrayList<Restoran>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +36,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        Bundle extras = getIntent().getExtras();
-        if (extras != null){
-
-            originLat = extras.getDouble("originLat");
-            originLon = extras.getDouble("originLon");
-//            destinationLat = extras.getDouble("destLat");
-//            destinationLon = extras.getDouble("destLon");
-//            destName = extras.getString("destName");
+        Intent i = getIntent();
+        if (i.getExtras() != null){
+            originLat = i.getExtras().getDouble("originLat");
+            originLon = i.getExtras().getDouble("originLon");
+            destinationLat = i.getExtras().getDouble("destLat");
+            destinationLon = i.getExtras().getDouble("destLon");
             locationNow = new LatLng(originLat,originLon);
-//            locationDest = new LatLng(destinationLat,destinationLon);
         }
 
 //        btnDirect = findViewById(R.id.btnDirect);
@@ -73,6 +69,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         origin = new MarkerOptions().position(locationNow).title("Your Here");
         mMap.addMarker(origin);
+        for (int i = 0; i < listRestSample.size(); i++){
+            destinationLat = Double.valueOf(listRestSample.get(i).getLatitude());
+            destinationLon = Double.valueOf(listRestSample.get(i).getLongitude());
+            destName = listRestSample.get(i).getName();
+            locationDest = new LatLng(destinationLat, destinationLon);
+            destination = new MarkerOptions().position(locationDest).title(destName);
+            mMap.addMarker(destination);
+        }
 //        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 //        Marker destination = mMap.addMarker(new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 //        destination.showInfoWindow();

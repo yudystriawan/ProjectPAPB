@@ -60,8 +60,6 @@ class WeatherActivity extends AsyncTask<String, Void, String> {
             String temp = String.valueOf(main_object.getDouble("temp"));
             String city = jo.getString("name");
             String desc = object.getString("description");
-            String humidity = String.valueOf(main_object.getString("humidity"));
-            String pressure = String.valueOf(main_object.getString("pressure"));
 
             double kelvin = Double.parseDouble(temp);
             double convert = (kelvin-273.15);
@@ -79,7 +77,6 @@ class WeatherActivity extends AsyncTask<String, Void, String> {
             text_tanggal.setText(date);
 
             weatherIconView = ((Activity)context).findViewById(R.id.icon_weather);
-
 
             text_suhu.setText(String.valueOf(celcius));
             text_suhu.setTextSize(100);

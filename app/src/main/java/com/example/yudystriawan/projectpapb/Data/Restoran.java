@@ -1,6 +1,9 @@
 package com.example.yudystriawan.projectpapb.Data;
 
-public class Restoran {
+
+import java.io.Serializable;
+
+public class Restoran implements Serializable {
     private String id, name, phone, rating, type, weather, latitude, longitude;
 
 
@@ -46,4 +49,5 @@ public class Restoran {
     public String getLongitude() {
         return longitude;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.yudystriawan.projectpapb.Adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.example.yudystriawan.projectpapb.Data.Food;
 import com.example.yudystriawan.projectpapb.Data.Restoran;
 import com.example.yudystriawan.projectpapb.DetailFoodActivity;
+import com.example.yudystriawan.projectpapb.MainActivity;
 import com.example.yudystriawan.projectpapb.R;
 
 import java.util.ArrayList;
@@ -41,11 +43,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
         foodViewHolder.image_food.setImageResource(R.drawable.ic_baseline_fastfood_24px);
         foodViewHolder.text_foodDesc.setText(resto.getName());
-        foodViewHolder.image_direction.setImageResource(R.drawable.ic_baseline_directions_24px);
+//        foodViewHolder.image_direction.setImageResource(R.drawable.ic_baseline_directions_24px);
         foodViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), DetailFoodActivity.class);
+                intent.putExtra("OriginLat", MainActivity.getLatitude());
+                intent.putExtra("OriginDest", MainActivity.getLongitude());
                 intent.putExtra("ID", resto.getId());
                 intent.putExtra("NAMA_RESTORAN", resto.getName());
                 intent.putExtra("LAT", resto.getLatitude());
@@ -53,7 +57,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 view.getContext().startActivity(intent);
             }
         });
-
     }
 
     @Override
