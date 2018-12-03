@@ -67,11 +67,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Restoran> listRestSample = new ArrayList<Restoran>();
     private FirebaseFirestore db;
     Context mContext;
-
-    private Calendar calendar;
-    private SimpleDateFormat dateFormat;
-    private String date;
-    private TextView text_tanggal, text_suhu, text_celcius, text_city;
+    private String weatherNow;
+    private TextView text_tanggal, text_suhu, text_celcius, text_city, text_detail;
     private WeatherIconView weatherIconView;
 
     @Override
@@ -112,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         getLastKnowLocation();
 
 //        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
-        getWeather(latitude, longitude);
         //getRecommend();
         readFB();
     }
@@ -134,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
                     String temp = String.valueOf(Math.round((main_object.getDouble("temp")-273.15)));
                     String city = response.getString("name");
+                    weatherNow = object.getString("main");
                     String detail = object.getString("description");
 
                     Calendar calendar = Calendar.getInstance();
@@ -144,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     text_suhu = findViewById(R.id.suhu);
                     text_celcius = findViewById(R.id.celcius);
                     text_city = findViewById(R.id.city);
-
+                    text_detail = findViewById(R.id.detail);
                     text_tanggal.setText(formatted_date);
 
                     weatherIconView = findViewById(R.id.icon_weather);
@@ -156,16 +153,27 @@ public class MainActivity extends AppCompatActivity {
 
                     text_city.setText(city);
 
-                    if (detail.contains("thunderstrom")){
-                        weatherIconView.setIconResource(getString(R.string.wi_day_thunderstorm));
-                    }else if (detail.contains("rain")){
-                        weatherIconView.setIconResource(getString(R.string.wi_day_rain));
-                    }else if (detail.contains("cloud")){
-                        weatherIconView.setIconResource(getString(R.string.wi_day_cloudy));
-                    }else if (detail.contains("snow")){
-                        weatherIconView.setIconResource(getString(R.string.wi_day_snow));
-                    }else {
-                        weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
+                    text_detail.setText(detail);
+
+                    switch(weatherNow){
+                        case "Thunderstorm":
+                            weatherIconView.setIconResource(getString(R.string.wi_day_thunderstorm));
+                            break;
+                        case "Rain":
+                            weatherIconView.setIconResource(getString(R.string.wi_day_rain));
+                            break;
+                        case "Clouds":
+                            weatherIconView.setIconResource(getString(R.string.wi_day_cloudy));
+                            break;
+                        case "Clear":
+                            weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
+                            break;
+                        case "Atmosphere":
+                            weatherIconView.setIconResource(getString(R.string.wi_day_haze));
+                            break;
+                        default:
+                            weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
+                            break;
                     }
                 } catch (JSONException e){
                     e.printStackTrace();
@@ -189,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
                     message = "Connection TimeOut! Please check your internet connection.";
                 }
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-
             }
         }
         );
@@ -220,8 +227,19 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
+                                try {
                                     latitude =  location.getLatitude();
                                     longitude =  location.getLongitude();
+
+                                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                                    if (addresses.size() > 0) {
+                                        getWeather(location.getLatitude(), location.getLongitude());
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             } else { // Show "no location" }
                             }
                         }
