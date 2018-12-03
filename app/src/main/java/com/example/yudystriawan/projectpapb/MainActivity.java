@@ -1,6 +1,7 @@
 package com.example.yudystriawan.projectpapb;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,20 +20,40 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.yudystriawan.projectpapb.Adapter.FoodAdapter;
 
 import com.example.yudystriawan.projectpapb.Data.Restoran;
+import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Restoran> listRestSample = new ArrayList<Restoran>();
     private FirebaseFirestore db;
     Context mContext;
+
+    private Calendar calendar;
+    private SimpleDateFormat dateFormat;
+    private String date;
+    private TextView text_tanggal, text_suhu, text_celcius, text_city;
+    private WeatherIconView weatherIconView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +111,90 @@ public class MainActivity extends AppCompatActivity {
 
         getLastKnowLocation();
 
-        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
+//        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
+        getWeather(latitude, longitude);
         //getRecommend();
         readFB();
+    }
+
+    private void getWeather(double latitude, double longitude) {
+        String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=3fd8da85e581b3ff8dfb191ea4454620";
+
+
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET,
+                url,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject main_object = response.getJSONObject("main");
+                    JSONArray array = response.getJSONArray("weather");
+
+                    JSONObject object = array.getJSONObject(0);
+
+                    String temp = String.valueOf(Math.round((main_object.getDouble("temp")-273.15)));
+                    String city = response.getString("name");
+                    String detail = object.getString("description");
+
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE-MM-dd");
+                    String formatted_date = sdf.format(calendar.getTime());
+
+                    text_tanggal = findViewById(R.id.tanggal);
+                    text_suhu = findViewById(R.id.suhu);
+                    text_celcius = findViewById(R.id.celcius);
+                    text_city = findViewById(R.id.city);
+
+                    text_tanggal.setText(formatted_date);
+
+                    weatherIconView = findViewById(R.id.icon_weather);
+
+                    text_suhu.setText(String.valueOf(temp));
+                    text_suhu.setTextSize(100);
+
+                    text_celcius.setText("\u2103");
+
+                    text_city.setText(city);
+
+                    if (detail.contains("thunderstrom")){
+                        weatherIconView.setIconResource(getString(R.string.wi_day_thunderstorm));
+                    }else if (detail.contains("rain")){
+                        weatherIconView.setIconResource(getString(R.string.wi_day_rain));
+                    }else if (detail.contains("cloud")){
+                        weatherIconView.setIconResource(getString(R.string.wi_day_cloudy));
+                    }else if (detail.contains("snow")){
+                        weatherIconView.setIconResource(getString(R.string.wi_day_snow));
+                    }else {
+                        weatherIconView.setIconResource(getString(R.string.wi_day_sunny));
+                    }
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                String message = null;
+                if (volleyError instanceof NetworkError) {
+                    message = "Cannot connect to Internet...Please check your connection";
+                } else if (volleyError instanceof ServerError) {
+                    message = "The location could not be found. Please try again";
+                } else if (volleyError instanceof AuthFailureError) {
+                    message = "Cannot connect to Internet...Please check your connection";
+                } else if (volleyError instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time";
+                } else if (volleyError instanceof NoConnectionError) {
+                    message = "Cannot connect to Internet...Please check your connection";
+                } else if (volleyError instanceof TimeoutError) {
+                    message = "Connection TimeOut! Please check your internet connection.";
+                }
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+            }
+        }
+        );
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(jor);
     }
     //^^^END OF ONCREATE
 
@@ -118,36 +226,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-        }
-    }
-
-//    private void getRecommend() {
-//        ArrayList<Food> foods = new ArrayList<Food>();
-//
-//        foods.add(new Food("Bakso", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//        foods.add(new Food("Soto", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//        foods.add(new Food("Sate", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//        foods.add(new Food("AAAA", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//        foods.add(new Food("BBB", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//        foods.add(new Food("CCCC", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//        foods.add(new Food("DDDD", R.drawable.ic_baseline_fastfood_24px, R.drawable.ic_baseline_directions_24px));
-//
-//        recycleFoods.setHasFixedSize(true);
-//        recycleFoods.setLayoutManager(new LinearLayoutManager(this));
-//
-//        foodAdapter = new FoodAdapter(LayoutInflater.from(this), foods);
-//        recycleFoods.setAdapter(foodAdapter);
-//    }
-
-    private void getWeather(String weatherLink) {
-        ConnectivityManager connMgr=(ConnectivityManager)getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        // Check for network connections
-        if (networkInfo != null && networkInfo.isConnected()) {
-            // Create background thread to connect and get data
-            new WeatherActivity(this).execute(weatherLink);
-        } else {
-            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
 
