@@ -39,7 +39,8 @@ public class DetailFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_food);
 
-        recyclerView = findViewById(R.id.recycle_review);
+        mContext = this;
+        recyclerRev = findViewById(R.id.recycle_review);
         textView = findViewById(R.id.nama_restoran);
         bottomNavigationView = findViewById(R.id.bottom_nav_detail_food);
 
