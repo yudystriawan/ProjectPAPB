@@ -262,16 +262,17 @@ public class MainActivity extends AppCompatActivity {
                         String id, name, phone, rating, type, weather, latitude, longitude;
                         //PERLU DITAMBAH TRY CATCH(?)
                         for (int i = 0; i < sizeData; i++) {
-
-                            id = queryDocumentSnapshots.getDocuments().get(i).get("Id").toString();
-                            name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
-                            phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
-                            rating = queryDocumentSnapshots.getDocuments().get(i).get("Rating").toString();
-                            type = queryDocumentSnapshots.getDocuments().get(i).get("Type").toString();
-                            weather = queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString();
-                            latitude = queryDocumentSnapshots.getDocuments().get(i).get("Latitude").toString();
-                            longitude = queryDocumentSnapshots.getDocuments().get(i).get("Longitude").toString();
-                            listRestSample.add(new Restoran(id, name, phone, rating, type, weather, latitude, longitude));
+                            if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
+                                id = queryDocumentSnapshots.getDocuments().get(i).get("Id").toString();
+                                name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
+                                phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
+                                rating = queryDocumentSnapshots.getDocuments().get(i).get("Rating").toString();
+                                type = queryDocumentSnapshots.getDocuments().get(i).get("Type").toString();
+                                weather = queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString();
+                                latitude = queryDocumentSnapshots.getDocuments().get(i).get("Latitude").toString();
+                                longitude = queryDocumentSnapshots.getDocuments().get(i).get("Longitude").toString();
+                                listRestSample.add(new Restoran(id, name, phone, rating, type, weather, latitude, longitude));
+                            }
                         }
                         recycleFoods.setHasFixedSize(true);
                         recycleFoods.setLayoutManager(new LinearLayoutManager(mContext));
