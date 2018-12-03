@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                         String id, name, phone, rating, type, weather, latitude, longitude;
                         //PERLU DITAMBAH TRY CATCH(?)
                         for (int i = 0; i < sizeData; i++) {
-//                            if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
+                            if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
                                 id = String.valueOf(i);
                                 name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
                                 phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                                 latitude = queryDocumentSnapshots.getDocuments().get(i).get("Latitude").toString();
                                 longitude = queryDocumentSnapshots.getDocuments().get(i).get("Longitude").toString();
                                 listRestSample.add(new Restoran(id, name, phone, rating, type, weather, latitude, longitude));
-//                            }
+                            }
                         }
                         if (listRestSample.size() != 0){
                             recycleFoods.setHasFixedSize(true);
