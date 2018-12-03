@@ -38,6 +38,10 @@
             android:name=".MapsNearbyActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".DetailFoodActivity"></activity>
+
+        <activity
+            android:name=".MapsPlacesActivity"
+            android:label="Places" />
     </application>
 
 </manifest>
