@@ -69,14 +69,15 @@ public class MapsDirectionActivity extends FragmentActivity implements OnMapRead
      * installed Google Play services and returned to the app.
      */
     @Override
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         origin = new MarkerOptions().position(locationNow).title("Your Here");
         mMap.addMarker(origin);
-        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+//        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         Marker destination = mMap.addMarker(new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         destination.showInfoWindow();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 14));
 //        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
 
     }

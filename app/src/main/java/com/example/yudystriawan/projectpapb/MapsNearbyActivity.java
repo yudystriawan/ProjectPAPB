@@ -67,10 +67,10 @@ public class MapsNearbyActivity extends FragmentActivity implements OnMapReadyCa
             destinationLon = Double.valueOf(listRestSample.get(i).getLongitude());
             destName = listRestSample.get(i).getName();
             locationDest = new LatLng(destinationLat, destinationLon);
-            destination = new MarkerOptions().position(locationDest).title(destName);
+            destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             mMap.addMarker(destination);
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 12));
 
     }
 

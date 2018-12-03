@@ -20,6 +20,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private String weatherNow;
     private TextView text_tanggal, text_suhu, text_celcius, text_city, text_detail;
     private WeatherIconView weatherIconView;
+    private Button btnTerpopuler, btnTerdekat;
 
     public ArrayList<Restoran> getListRestSample() {
         return listRestSample;
@@ -86,9 +89,28 @@ public class MainActivity extends AppCompatActivity {
         recycleFoods = findViewById(R.id.recycle_view_foods);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        btnTerdekat = findViewById(R.id.btnTerdekat);
+        btnTerpopuler = findViewById(R.id.btnTerpopuler);
 
         getLastKnowLocation();
-        readFB();
+
+        readFB("DaftarMakananSample");
+
+        btnTerdekat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listRestSample.clear();
+                readFB("DaftarMakananSample");
+            }
+        });
+
+        btnTerpopuler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listRestSample.clear();
+                readFB("DaftarMakanan");
+            }
+        });
 
 //        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
         //getRecommend();
@@ -255,11 +277,12 @@ public class MainActivity extends AppCompatActivity {
     }
     //AMBIL DATA DARI FIREBASE
     int sizeData = 0;
-    private void readFB() {
+
+    private void readFB(String database) {
 
         db = FirebaseFirestore.getInstance();
 
-        db.collection("DaftarMakanan")
+        db.collection(database)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
