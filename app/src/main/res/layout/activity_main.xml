@@ -90,7 +90,7 @@
         android:id="@+id/btnTerdekat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:text="Terdekat"
         app:layout_constraintStart_toEndOf="@+id/city"
         app:layout_constraintTop_toBottomOf="@+id/city" />
@@ -99,11 +99,9 @@
         android:id="@+id/btnTerpopuler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:text="Terpopuler"
         app:layout_constraintEnd_toStartOf="@+id/detail"
-        app:layout_constraintStart_toEndOf="@+id/btnTerdekat"
         app:layout_constraintTop_toBottomOf="@+id/city" />
 
 
