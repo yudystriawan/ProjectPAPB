@@ -62,6 +62,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private RecyclerView recycleFoods;
     private RecyclerView.Adapter foodAdapter;
@@ -83,10 +84,11 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
 
         recycleFoods = findViewById(R.id.recycle_view_foods);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         btnTerdekat = findViewById(R.id.btnTerdekat);
         btnTerpopuler = findViewById(R.id.btnTerpopuler);
+        bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         getLastKnowLocation();
 
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 //        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
         //getRecommend();
 
-        bottomNavigationView = findViewById(R.id.bottom_nav_bar);
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -179,6 +181,26 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+// If the permission is granted, get the location, otherwise, show a Toast
+                if (grantResults.length > 0
+                        && grantResults[0]
+                        == PackageManager.PERMISSION_GRANTED) {
+                    getLastKnowLocation();
+                } else {
+                    Toast.makeText(this,
+                            "Permission denied",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
