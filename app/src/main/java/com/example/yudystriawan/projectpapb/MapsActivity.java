@@ -1,39 +1,63 @@
 package com.example.yudystriawan.projectpapb;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.net.URL;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private GoogleMap mMap;
-    private double lat, lng;
+    MarkerOptions origin, destination;
+    private static LatLng locationDest;
+    private static LatLng locationNow;
+    private Button btnDirect;
+    double originLat, originLon, destinationLat, destinationLon;
+    String destName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
 
-        Intent intent1 = getIntent();
-        lat = intent1.getDoubleExtra("LATITUDE", MainActivity.latitude);
-        lng = intent1.getDoubleExtra("LONGITUDE", MainActivity.longitude);
+            originLat = extras.getDouble("originLat");
+            originLon = extras.getDouble("originLon");
+//            destinationLat = extras.getDouble("destLat");
+//            destinationLon = extras.getDouble("destLon");
+//            destName = extras.getString("destName");
+            locationNow = new LatLng(originLat,originLon);
+//            locationDest = new LatLng(destinationLat,destinationLon);
+        }
+
+//        btnDirect = findViewById(R.id.btnDirect);
+//
+//        btnDirect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                OpenGoogleMap(destinationLat, destinationLon);
+//            }
+//        });
     }
-
 
     /**
      * Manipulates the map once available.
@@ -47,21 +71,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        origin = new MarkerOptions().position(locationNow).title("Your Here");
+        mMap.addMarker(origin);
+//        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+//        Marker destination = mMap.addMarker(new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//        destination.showInfoWindow();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 15));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 1000, null);
 
-        LatLng current = new LatLng(lat, lng);
-//        mMap.addMarker(new MarkerOptions().position(current).title("Marker"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
-        // Zoom in, animating the camera.
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+    }
 
-// Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
+    public void OpenGoogleMap(double latitude, double longitude){
+        // Create a Uri from an intent string. Use the result to create an Intent.
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude+","+ longitude + "&mode=d");
+
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        // Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Attempt to start an activity that can handle the Intent
+        startActivity(mapIntent);
     }
 }
