@@ -12,6 +12,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -142,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     public static double getLatitude() {
         return latitude;
     }
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                     String detail = object.getString("description");
 
                     Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE-MM-dd");
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM");
                     String formatted_date = sdf.format(calendar.getTime());
 
                     text_tanggal = findViewById(R.id.tanggal);
