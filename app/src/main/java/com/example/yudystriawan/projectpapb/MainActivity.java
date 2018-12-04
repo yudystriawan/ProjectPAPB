@@ -89,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
         
         getLastKnowLocation();
 
-        jenisDatabase = "DaftarMakananSample";
+        jenisDatabase = "DaftarMakananTerdekat";
         readFB(jenisDatabase);
 
         btnTerdekat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listRestSample.clear();
-                jenisDatabase = "DaftarMakananSample";
+                jenisDatabase = "DaftarMakananTerdekat";
                 readFB(jenisDatabase);
             }
         });
