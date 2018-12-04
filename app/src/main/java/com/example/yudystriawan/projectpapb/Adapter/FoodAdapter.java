@@ -56,6 +56,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 intent.putExtra("DestLon", Double.valueOf(resto.getLongitude()));
                 intent.putExtra("PHONE", resto.getPhone());
                 intent.putExtra("Type", resto.getType());
+                intent.putExtra("Database", MainActivity.getJenisDatabase());
                 view.getContext().startActivity(intent);
             }
         });

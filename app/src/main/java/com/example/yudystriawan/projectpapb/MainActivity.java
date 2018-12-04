@@ -151,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
         return longitude;
     }
 
+    public static String getJenisDatabase() {
+        return jenisDatabase;
+    }
+
     private void getLastKnowLocation() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
