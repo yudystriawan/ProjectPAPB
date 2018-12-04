@@ -70,7 +70,7 @@ public class MapsNearbyActivity extends FragmentActivity implements OnMapReadyCa
             destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             mMap.addMarker(destination);
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 12));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationNow, 14));
 
     }
 

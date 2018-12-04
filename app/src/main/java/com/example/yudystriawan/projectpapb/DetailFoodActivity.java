@@ -11,12 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.yudystriawan.projectpapb.Adapter.ReviewAdapter;
 import com.example.yudystriawan.projectpapb.Data.Review;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -25,11 +25,12 @@ import java.util.ArrayList;
 public class DetailFoodActivity extends AppCompatActivity {
 
     private TextView textView;
+    private ImageView imageFood;
     private BottomNavigationView bottomNavigationView;
 
     private RecyclerView recyclerRev;
     private RecyclerView.Adapter reviewAdapter;
-    String restoran,phone,id;
+    String restoran,phone,id,tipeResto;
     double destLat,destLon,oriLat,oriLon;
     private FirebaseFirestore db;
     Context mContext;
@@ -43,6 +44,7 @@ public class DetailFoodActivity extends AppCompatActivity {
         recyclerRev = findViewById(R.id.recycle_review);
         textView = findViewById(R.id.nama_restoran);
         bottomNavigationView = findViewById(R.id.bottom_nav_detail_food);
+        imageFood = findViewById(R.id.image_food);
 
 
         Intent intent = getIntent();
@@ -50,6 +52,7 @@ public class DetailFoodActivity extends AppCompatActivity {
         restoran = b.getString("DestName");
         phone = b.getString("PHONE");
         id = b.getString("ID");
+        tipeResto = b.getString("Type");
         destLat = b.getDouble("DestLat");
         destLon = b.getDouble("DestLon");
         oriLat = b.getDouble("OriginLat");
@@ -57,6 +60,29 @@ public class DetailFoodActivity extends AppCompatActivity {
 
         textView.setText(restoran);
 
+        switch(tipeResto){
+            case "Beverages":
+                imageFood.setImageResource(R.drawable.beverages);
+                break;
+            case "Cake & Cookies":
+                imageFood.setImageResource(R.drawable.cake);
+                break;
+            case "Chicken & Duck":
+                imageFood.setImageResource(R.drawable.chicken);
+                break;
+            case "Chinese":
+                imageFood.setImageResource(R.drawable.chinese);
+                break;
+            case "Rice Delights":
+                imageFood.setImageResource(R.drawable.rice);
+                break;
+            case "Snack":
+                imageFood.setImageResource(R.drawable.snack);
+                break;
+            case "Sweet & Desserts":
+                imageFood.setImageResource(R.drawable.sweet);
+                break;
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
