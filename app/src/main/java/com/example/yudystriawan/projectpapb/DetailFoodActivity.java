@@ -30,7 +30,7 @@ public class DetailFoodActivity extends AppCompatActivity {
 
     private RecyclerView recyclerRev;
     private RecyclerView.Adapter reviewAdapter;
-    String restoran,phone,id,tipeResto;
+    String restoran,phone,id,tipeResto, jenisDatabase;
     double destLat,destLon,oriLat,oriLon;
     private FirebaseFirestore db;
     Context mContext;
@@ -57,6 +57,7 @@ public class DetailFoodActivity extends AppCompatActivity {
         destLon = b.getDouble("DestLon");
         oriLat = b.getDouble("OriginLat");
         oriLon = b.getDouble("OriginLon");
+        jenisDatabase = b.getString("Database");
 
         textView.setText(restoran);
 
@@ -140,7 +141,7 @@ public class DetailFoodActivity extends AppCompatActivity {
             }
         });
 
-        readRev(id, MainActivity.jenisDatabase);
+        readRev(id, jenisDatabase);
 
     }
 
