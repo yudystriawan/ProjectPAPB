@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class DetailFoodActivity extends AppCompatActivity {
 
-    private TextView textView;
+    private TextView textView, tReview;
     private ImageView imageFood;
     private BottomNavigationView bottomNavigationView;
 
@@ -45,6 +45,7 @@ public class DetailFoodActivity extends AppCompatActivity {
         textView = findViewById(R.id.nama_restoran);
         bottomNavigationView = findViewById(R.id.bottom_nav_detail_food);
         imageFood = findViewById(R.id.image_food);
+        tReview = findViewById(R.id.review);
 
 
         Intent intent = getIntent();
@@ -165,11 +166,16 @@ public class DetailFoodActivity extends AppCompatActivity {
                                 nama = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
                                 rev.add(new Review(nama, komentar));
                             }
+                        }
+                        if (rev.size() != 0 ){
+                            tReview.setText("Review");
                             recyclerRev.setHasFixedSize(true);
                             recyclerRev.setLayoutManager(new LinearLayoutManager(mContext));
 
                             reviewAdapter = new ReviewAdapter(LayoutInflater.from(mContext), rev);
                             recyclerRev.setAdapter(reviewAdapter);
+                        }else{
+                            tReview.setText("Tidak ada Review");
                         }
                     }
                 });
