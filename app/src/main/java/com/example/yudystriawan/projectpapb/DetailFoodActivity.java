@@ -101,6 +101,7 @@ public class DetailFoodActivity extends AppCompatActivity {
                         direction.putExtra("OriginLon", oriLon);
                         direction.putExtra("DestLat", destLat);
                         direction.putExtra("DestLon", destLon);
+                        direction.putExtra("DestName", restoran);
                         startActivity(direction);
                     default:
                         break;

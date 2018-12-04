@@ -28,7 +28,7 @@ public class MapsDirectionActivity extends FragmentActivity implements OnMapRead
     private static LatLng locationNow;
     private Button btnDirect;
     double originLat, originLon, destinationLat, destinationLon;
-    String destName;
+    private String destName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
