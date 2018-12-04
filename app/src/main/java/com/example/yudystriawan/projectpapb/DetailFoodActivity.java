@@ -79,8 +79,38 @@ public class DetailFoodActivity extends AppCompatActivity {
             case "Snack":
                 imageFood.setImageResource(R.drawable.snack);
                 break;
-            case "Sweet & Desserts":
+            case "Sweets & Desserts":
                 imageFood.setImageResource(R.drawable.sweet);
+                break;
+            case "Bakso":
+                imageFood.setImageResource(R.drawable.bakso);
+                break;
+            case "Coffee":
+                imageFood.setImageResource(R.drawable.cofee);
+                break;
+            case "Fast Food":
+                imageFood.setImageResource(R.drawable.fastfood);
+                break;
+            case "Pizza&Pasta":
+                imageFood.setImageResource(R.drawable.pizza);
+                break;
+            case "Noodles":
+                imageFood.setImageResource(R.drawable.noodles);
+                break;
+            case "Sate":
+                imageFood.setImageResource(R.drawable.sate);
+                break;
+            case "Seafood":
+                imageFood.setImageResource(R.drawable.seafood);
+                break;
+            case "Soto":
+                imageFood.setImageResource(R.drawable.soto);
+                break;
+            case "Soup":
+                imageFood.setImageResource(R.drawable.soup);
+                break;
+            case "Western":
+                imageFood.setImageResource(R.drawable.western);
                 break;
         }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
