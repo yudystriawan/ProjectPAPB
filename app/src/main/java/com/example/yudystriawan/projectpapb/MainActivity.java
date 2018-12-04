@@ -49,6 +49,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -309,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                         //PERLU DITAMBAH TRY CATCH(?)
                         for (int i = 0; i < sizeData; i++) {
                             if (queryDocumentSnapshots.getDocuments().get(i).get("Weather").toString().equalsIgnoreCase(weatherNow)) {
-                                id = String.valueOf(i);
+                                id = queryDocumentSnapshots.getDocuments().get(i).getReference().getId();
                                 name = queryDocumentSnapshots.getDocuments().get(i).get("Name").toString();
                                 phone = queryDocumentSnapshots.getDocuments().get(i).get("Phone").toString();
                                 rating = queryDocumentSnapshots.getDocuments().get(i).get("Rating").toString();
@@ -331,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+
 
     }
 

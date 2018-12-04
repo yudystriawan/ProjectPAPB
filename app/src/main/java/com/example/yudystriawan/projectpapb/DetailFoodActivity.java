@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.yudystriawan.projectpapb.Adapter.ReviewAdapter;
 import com.example.yudystriawan.projectpapb.Data.Review;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -31,7 +32,6 @@ public class DetailFoodActivity extends AppCompatActivity {
     String restoran,phone,id;
     double destLat,destLon,oriLat,oriLon;
     private FirebaseFirestore db;
-    ArrayList<Review> review = new ArrayList<>();
     Context mContext;
 
     @Override
@@ -100,16 +100,17 @@ public class DetailFoodActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         String komentar, nama;
                         int sizeData = queryDocumentSnapshots.size();
+                        ArrayList<Review> rev = new ArrayList<>();
                         if(sizeData != 0){
                             for (int i = 0; i < sizeData; i++) {
                                 komentar = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
                                 nama = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
-                                review.add(new Review(nama, komentar));
+                                rev.add(new Review(nama, komentar));
                             }
                             recyclerRev.setHasFixedSize(true);
                             recyclerRev.setLayoutManager(new LinearLayoutManager(mContext));
 
-                            reviewAdapter = new ReviewAdapter(LayoutInflater.from(mContext), review);
+                            reviewAdapter = new ReviewAdapter(LayoutInflater.from(mContext), rev);
                             recyclerRev.setAdapter(reviewAdapter);
                         }
                     }
