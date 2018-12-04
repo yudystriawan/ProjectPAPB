@@ -70,7 +70,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
         public TextView text_foodDesc;
         public ImageView image_food;
-        public ImageView image_direction;
         public LinearLayout linearLayout;
 
         public FoodViewHolder(@NonNull View itemView) {
@@ -78,7 +77,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
             text_foodDesc = itemView.findViewById(R.id.food_desc);
             image_food = itemView.findViewById(R.id.image_food);
-            image_direction = itemView.findViewById(R.id.image_getDirection);
             linearLayout = itemView.findViewById(R.id.linear_food);
         }
     }

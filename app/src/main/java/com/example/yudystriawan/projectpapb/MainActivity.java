@@ -17,7 +17,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,40 +83,11 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
 
         recycleFoods = findViewById(R.id.recycle_view_foods);
-        btnTerdekat = findViewById(R.id.btnTerdekat);
-        btnTerpopuler = findViewById(R.id.btnTerpopuler);
         bottomNavigationView = findViewById(R.id.bottom_nav_bar);
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        
         getLastKnowLocation();
-
-        jenisDatabase = "DaftarMakananTerdekat";
-        readFB(jenisDatabase);
-
-        btnTerdekat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listRestSample.clear();
-                jenisDatabase = "DaftarMakananTerdekat";
-                readFB(jenisDatabase);
-            }
-        });
-
-        btnTerpopuler.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listRestSample.clear();
-                jenisDatabase = "DaftarMakanan";
-                readFB(jenisDatabase);
-            }
-        });
-
-//        getWeather("https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=28c444227fbea12e1d303822b43f327f");
-        //getRecommend();
-
-
+        setSpinner();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -140,7 +114,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //^^^END OF ONCREATE
+    private void setSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.menu_option);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.nav_option, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapterView.getItemAtPosition(i).equals("Terdekat")){
+                    listRestSample.clear();
+                    jenisDatabase = "DaftarMakananTerdekat";
+                    readFB(jenisDatabase);
+                }else{
+                    listRestSample.clear();
+                    jenisDatabase = "DaftarMakanan";
+                    readFB(jenisDatabase);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // code here
+            }
+        });
+    }
 
 
     public static double getLatitude() {
