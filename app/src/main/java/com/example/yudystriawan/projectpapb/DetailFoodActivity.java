@@ -103,8 +103,8 @@ public class DetailFoodActivity extends AppCompatActivity {
                         ArrayList<Review> rev = new ArrayList<>();
                         if(sizeData != 0){
                             for (int i = 0; i < sizeData; i++) {
-                                komentar = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
-                                nama = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
+                                komentar = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
+                                nama = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
                                 rev.add(new Review(nama, komentar));
                             }
                             recyclerRev.setHasFixedSize(true);

@@ -5,4 +5,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="nav_call">Call</string>
     <string name="nav_direction">Direction</string>
+    <string name="review">Review</string>
 </resources>
