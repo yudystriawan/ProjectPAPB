@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,11 +30,14 @@ public class DetailFoodActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     private RecyclerView recyclerRev;
-    private RecyclerView.Adapter reviewAdapter;
+    private RecyclerView.Adapter reviewAdapter, nothingAdapter;
     String restoran,phone,id,tipeResto;
     double destLat,destLon,oriLat,oriLon;
     private FirebaseFirestore db;
     Context mContext;
+    private FrameLayout frameLayout;
+    ArrayList<Review> rev = new ArrayList<>();
+    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +45,13 @@ public class DetailFoodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_food);
 
         mContext = this;
+        frameLayout = findViewById(R.id.frame_detail);
         recyclerRev = findViewById(R.id.recycle_review);
         textView = findViewById(R.id.nama_restoran);
         bottomNavigationView = findViewById(R.id.bottom_nav_detail_food);
         imageFood = findViewById(R.id.image_food);
 
-
+        text = findViewById(R.id.review);
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
         restoran = b.getString("DestName");
@@ -157,19 +162,26 @@ public class DetailFoodActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         String komentar, nama;
                         int sizeData = queryDocumentSnapshots.size();
-                        ArrayList<Review> rev = new ArrayList<>();
                         if(sizeData != 0){
                             for (int i = 0; i < sizeData; i++) {
                                 komentar = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
                                 nama = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
                                 rev.add(new Review(nama, komentar));
                             }
+
+                            }
+                        if (rev.size() != 0){
+                            text.setText("Review");
                             recyclerRev.setHasFixedSize(true);
                             recyclerRev.setLayoutManager(new LinearLayoutManager(mContext));
 
                             reviewAdapter = new ReviewAdapter(LayoutInflater.from(mContext), rev);
                             recyclerRev.setAdapter(reviewAdapter);
+                        }else{
+                            text.setText("Tidak ada Review");
                         }
+
+
                     }
                 });
 

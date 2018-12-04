@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.yudystriawan.projectpapb.Data.Food;
 import com.example.yudystriawan.projectpapb.Data.Restoran;
 import com.example.yudystriawan.projectpapb.DetailFoodActivity;
 import com.example.yudystriawan.projectpapb.MainActivity;

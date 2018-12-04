@@ -73,8 +73,9 @@ public class MapsDirectionActivity extends FragmentActivity implements OnMapRead
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        origin = new MarkerOptions().position(locationNow).title("Your Here");
-        mMap.addMarker(origin);
+//        origin = new MarkerOptions().position(locationNow).title("Your Here");
+//        mMap.addMarker(origin);
+        mMap.setMyLocationEnabled(true);
 //        destination = new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         Marker destination = mMap.addMarker(new MarkerOptions().position(locationDest).title(destName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         destination.showInfoWindow();

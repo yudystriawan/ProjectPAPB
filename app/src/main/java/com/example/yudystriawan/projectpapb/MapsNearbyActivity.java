@@ -1,7 +1,10 @@
 package com.example.yudystriawan.projectpapb;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 
 public class MapsNearbyActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
     private GoogleMap mMap;
     MarkerOptions origin, destination;
     private static LatLng locationDest;
@@ -40,11 +44,11 @@ public class MapsNearbyActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Intent i = getIntent();
-        if (i.getExtras() != null){
+        if (i.getExtras() != null) {
             originLat = i.getExtras().getDouble("originLat");
             originLon = i.getExtras().getDouble("originLon");
-            listRestSample =  (ArrayList<Restoran>) i.getSerializableExtra("data");
-            locationNow = new LatLng(originLat,originLon);
+            listRestSample = (ArrayList<Restoran>) i.getSerializableExtra("data");
+            locationNow = new LatLng(originLat, originLon);
         }
     }
 
@@ -60,8 +64,14 @@ public class MapsNearbyActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        origin = new MarkerOptions().position(locationNow).title("Your Here");
-        mMap.addMarker(origin);
+//        origin = new MarkerOptions().position(locationNow).title("Your Here");
+//        mMap.addMarker(origin);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        }
+        mMap.setMyLocationEnabled(true);
         for (int i = 0; i < listRestSample.size(); i++){
             destinationLat = Double.valueOf(listRestSample.get(i).getLatitude());
             destinationLon = Double.valueOf(listRestSample.get(i).getLongitude());
