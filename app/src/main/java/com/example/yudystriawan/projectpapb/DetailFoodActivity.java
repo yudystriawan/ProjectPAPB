@@ -146,7 +146,7 @@ public class DetailFoodActivity extends AppCompatActivity {
 
     }
 
-    private void readRev(String indeks, String database) {
+    public void readRev(final String indeks, final String database) {
 
         db = FirebaseFirestore.getInstance();
 
@@ -157,14 +157,17 @@ public class DetailFoodActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        String komentar, nama;
+                        String komentar, nama, idr;
+                        String dbr = database;
+                        String indeksR = indeks;
                         int sizeData = queryDocumentSnapshots.size();
                         ArrayList<Review> rev = new ArrayList<>();
                         if(sizeData != 0){
                             for (int i = 0; i < sizeData; i++) {
+                                idr = queryDocumentSnapshots.getDocuments().get(i).getReference().getId();
                                 komentar = queryDocumentSnapshots.getDocuments().get(i).get("Comment").toString();
                                 nama = queryDocumentSnapshots.getDocuments().get(i).get("Username").toString();
-                                rev.add(new Review(nama, komentar));
+                                rev.add(new Review(nama, komentar, idr, dbr, indeksR));
                             }
                         }
                         if (rev.size() != 0 ){
@@ -179,6 +182,5 @@ public class DetailFoodActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 }
