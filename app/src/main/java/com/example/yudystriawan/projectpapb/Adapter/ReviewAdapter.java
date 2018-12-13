@@ -1,6 +1,5 @@
 package com.example.yudystriawan.projectpapb.Adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,24 +11,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yudystriawan.projectpapb.Data.Review;
-import com.example.yudystriawan.projectpapb.DetailFoodActivity;
 import com.example.yudystriawan.projectpapb.EditActivity;
-import com.example.yudystriawan.projectpapb.InsertActivity;
-import com.example.yudystriawan.projectpapb.MainActivity;
 import com.example.yudystriawan.projectpapb.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
-    LayoutInflater mInflater;
-    ArrayList<Review> reviewArrayList;
+    private LayoutInflater mInflater;
+    private ArrayList<Review> reviewArrayList;
+
 
     public ReviewAdapter(LayoutInflater mInflater, ArrayList<Review> reviewArrayList) {
         this.mInflater = mInflater;
@@ -107,6 +99,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
         public TextView text_nama, text_review, tdelete, tedit;
         public ImageView image_user;
+
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
