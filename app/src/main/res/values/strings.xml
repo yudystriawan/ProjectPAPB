@@ -19,4 +19,7 @@
     <string name="rest_name">Restoran</string>
     <string name="title_activity_edit">editActivity</string>
     <string name="title_activity_insert">InsertActivity</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="nav_addComment">Add</string>
 </resources>

@@ -52,8 +52,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         reviewViewHolder.text_nama.setText(review.getNama());
         reviewViewHolder.text_review.setText(review.getKomentar());
 
-        //DELETE
-        reviewViewHolder.image_user.setOnClickListener(new View.OnClickListener() {
+        //DELETE REVIEW
+        reviewViewHolder.tdelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -84,8 +84,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         });
 
-        //EDIT
-        reviewViewHolder.text_nama.setOnClickListener(new View.OnClickListener() {
+        //EDIT REVIEW
+        reviewViewHolder.tedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 Intent intent = new Intent(view.getContext(), EditActivity.class);
@@ -97,19 +97,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             }
 
         });
-
-        //INSERT
-        reviewViewHolder.text_review.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                Intent intent = new Intent(view.getContext(), InsertActivity.class);
-                intent.putExtra("DB", review.getDb());
-                intent.putExtra("INDEKS", review.getIndeks());
-                view.getContext().startActivity(intent);
-            }
-
-        });
-
     }
 
     @Override
@@ -118,7 +105,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
-        public TextView text_nama, text_review;
+        public TextView text_nama, text_review, tdelete, tedit;
         public ImageView image_user;
 
         public ReviewViewHolder(@NonNull View itemView) {
@@ -127,6 +114,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             text_nama = itemView.findViewById(R.id.nama_user);
             text_review = itemView.findViewById(R.id.review_user);
             image_user = itemView.findViewById(R.id.image_user);
+            tdelete = itemView.findViewById(R.id.delete);
+            tedit = itemView.findViewById(R.id.edit);
         }
     }
 }

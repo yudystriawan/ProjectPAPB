@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class DetailFoodActivity extends AppCompatActivity {
 
-    private TextView textView, tReview;
+    private TextView textView, tReview, tAdd;
     private ImageView imageFood;
     private BottomNavigationView bottomNavigationView;
 
@@ -135,6 +135,13 @@ public class DetailFoodActivity extends AppCompatActivity {
                         direction.putExtra("DestLon", destLon);
                         direction.putExtra("DestName", restoran);
                         startActivity(direction);
+                        break;
+                    case R.id.nav_addComment:
+                        Intent intent = new Intent(getBaseContext(), InsertActivity.class);
+                        intent.putExtra("DB", jenisDatabase);
+                        intent.putExtra("INDEKS", id);
+                        startActivity(intent);
+                        break;
                     default:
                         break;
                 }
