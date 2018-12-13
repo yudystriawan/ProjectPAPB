@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.yudystriawan.projectpapb.Data.Review;
 import com.example.yudystriawan.projectpapb.DetailFoodActivity;
+import com.example.yudystriawan.projectpapb.EditActivity;
+import com.example.yudystriawan.projectpapb.InsertActivity;
 import com.example.yudystriawan.projectpapb.MainActivity;
 import com.example.yudystriawan.projectpapb.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +51,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         reviewViewHolder.text_nama.setText(review.getNama());
         reviewViewHolder.text_review.setText(review.getKomentar());
+
+        //DELETE
         reviewViewHolder.image_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -67,7 +71,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                                     reviewArrayList.remove(i);
                                     notifyItemRemoved(i);
                                     notifyDataSetChanged();
-                                    Toast.makeText(view.getContext(), "DOC Deleted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(view.getContext(), "Comment Deleted", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -80,21 +84,28 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         });
 
+        //EDIT
         reviewViewHolder.text_nama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                final DocumentReference reviewDb = db.collection(review.getDb())
-                        .document(review.getIndeks())
-                        .collection("LstReview")
-                        .document(review.getId());
-                reviewDb.update("Comment", "S***, F***, Nge****")
-                        .addOnSuccessListener(new OnSuccessListener < Void > () {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(view.getContext(), "Updated Successfully", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                Intent intent = new Intent(view.getContext(), EditActivity.class);
+                intent.putExtra("DB", review.getDb());
+                intent.putExtra("INDEKS", review.getIndeks());
+                intent.putExtra("ID", review.getId());
+                intent.putExtra("KOMENTAR", review.getKomentar());
+                view.getContext().startActivity(intent);
+            }
+
+        });
+
+        //INSERT
+        reviewViewHolder.text_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                Intent intent = new Intent(view.getContext(), InsertActivity.class);
+                intent.putExtra("DB", review.getDb());
+                intent.putExtra("INDEKS", review.getIndeks());
+                view.getContext().startActivity(intent);
             }
 
         });

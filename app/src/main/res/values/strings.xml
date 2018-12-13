@@ -17,4 +17,6 @@
     <string name="weather_desc">Sunny</string>
     <string name="image_food">Image</string>
     <string name="rest_name">Restoran</string>
+    <string name="title_activity_edit">editActivity</string>
+    <string name="title_activity_insert">InsertActivity</string>
 </resources>
