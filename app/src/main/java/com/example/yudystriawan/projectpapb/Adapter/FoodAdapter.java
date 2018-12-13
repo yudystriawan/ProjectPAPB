@@ -1,6 +1,5 @@
 package com.example.yudystriawan.projectpapb.Adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +18,8 @@ import com.example.yudystriawan.projectpapb.R;
 import java.util.ArrayList;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
-    LayoutInflater mInflater;
-    ArrayList<Restoran> foodArrayList;
+    private LayoutInflater mInflater;
+    private ArrayList<Restoran> foodArrayList;
 
     public FoodAdapter(LayoutInflater mInflater, ArrayList<Restoran> foodArrayList) {
         this.mInflater = mInflater;
